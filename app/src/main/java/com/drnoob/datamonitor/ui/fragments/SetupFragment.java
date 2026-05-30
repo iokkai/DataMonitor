@@ -74,6 +74,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -1214,8 +1215,7 @@ public class SetupFragment extends Fragment {
                         TextView cancel = footer.findViewById(R.id.cancel);
                         TextView ok = footer.findViewById(R.id.ok);
 
-                        (((LinearLayout) ((LinearLayout) timePicker.getChildAt(0)).getChildAt(0)).getChildAt(0)).setVerticalScrollBarEnabled(false);
-                        (((LinearLayout) ((LinearLayout) timePicker.getChildAt(0)).getChildAt(0)).getChildAt(2)).setVerticalScrollBarEnabled(false);
+                        disableScrollBars(timePicker);
 
                         int resetHour = PreferenceManager.getDefaultSharedPreferences(getContext())
                                 .getInt(DATA_RESET_HOUR, -1);
@@ -1784,6 +1784,20 @@ public class SetupFragment extends Fragment {
                         ExistingWorkPolicy.KEEP,
                         smartDataAllocationWorkRequest
                 );
+            }
+        }
+
+        private void disableScrollBars(ViewGroup viewGroup) {
+            if (viewGroup == null) return;
+
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                if (child instanceof android.widget.NumberPicker) {
+                    child.setVerticalScrollBarEnabled(false);
+                }
+                else if (child instanceof ViewGroup) {
+                    disableScrollBars((ViewGroup) child);
+                }
             }
         }
     }
